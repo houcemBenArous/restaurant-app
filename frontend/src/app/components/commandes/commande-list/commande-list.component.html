@@ -1,0 +1,77 @@
+<div class="container">
+  <div class="header">
+    <h2>Liste des Commandes</h2>
+    <button class="add-button" routerLink="/commandes/nouveau">Nouvelle commande</button>
+  </div>
+
+  <div class="controls">
+    <input 
+      type="text" 
+      [ngModel]="searchTerm"
+      (ngModelChange)="search($event)"
+      placeholder="Rechercher une commande..."
+      class="search-input"
+    >
+    
+    <div class="sort-controls">
+      <button (click)="sort('dateCommande')" [class.active]="sortField === 'dateCommande'">
+        Date {{ sortField === 'dateCommande' ? (sortDirection === 'asc' ? '↑' : '↓') : '' }}
+      </button>
+      <button (click)="sort('total')" [class.active]="sortField === 'total'">
+        Total {{ sortField === 'total' ? (sortDirection === 'asc' ? '↑' : '↓') : '' }}
+      </button>
+      <button (click)="sort('statut')" [class.active]="sortField === 'statut'">
+        Statut {{ sortField === 'statut' ? (sortDirection === 'asc' ? '↑' : '↓') : '' }}
+      </button>
+    </div>
+
+    <div class="statut-filter">
+      <button (click)="filterByStatut('tous')" class="filter-btn">Tous</button>
+      @for (statut of statutOptions; track statut) {
+        <button 
+          (click)="filterByStatut(statut)" 
+          class="filter-btn"
+          [class]="getStatutClass(statut)">
+          {{ statut }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="commande-grid">
+    @for (commande of paginatedCommandes; track commande.id) {
+      <div class="commande-card">
+        <h3>Commande #{{ commande.id }}</h3>
+        <p>Client: {{ commande.client.nom }}</p>
+        <p>Total: {{ commande.total | number:'1.2-2' }}€</p>
+        <p>Remise: {{ commande.remise | number:'1.2-2' }}€</p>
+        <p>Total final: {{ commande.totalApresRemise | number:'1.2-2' }}€</p>
+        <p class="statut" [class]="getStatutClass(commande.statut)">
+          Statut: {{ commande.statut }}
+        </p>
+        <div class="plats-list">
+          <h4>Plats commandés:</h4>
+          <ul>
+            @for (plat of commande.plats; track plat.id) {
+              <li>{{ plat.nom }} - {{ plat.prix }}€</li>
+            }
+          </ul>
+        </div>
+        <div class="actions">
+          <button (click)="updateStatut(commande)">Changer statut</button>
+          <button (click)="editCommande(commande)">Modifier</button>
+          <button (click)="deleteCommande(commande.id)">Supprimer</button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="pagination">
+    <button (click)="previousPage()" [disabled]="currentPage === 1">Précédent</button>
+    <span>Page {{ currentPage }}</span>
+    <button (click)="nextPage()" 
+            [disabled]="currentPage * itemsPerPage >= filteredCommandes.length">
+      Suivant
+    </button>
+  </div>
+</div> 

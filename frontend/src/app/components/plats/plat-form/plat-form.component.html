@@ -1,0 +1,52 @@
+<div class="container">
+  <h2>{{ plat.id ? 'Modifier' : 'Créer' }} un plat</h2>
+  
+  <form (ngSubmit)="onSubmit()" #platForm="ngForm">
+    <div class="form-group">
+      <label for="nom">Nom</label>
+      <input 
+        type="text" 
+        id="nom" 
+        name="nom" 
+        [(ngModel)]="plat.nom" 
+        required>
+    </div>
+
+    <div class="form-group">
+      <label for="ingredients">Ingrédients (séparés par des virgules)</label>
+      <input 
+        type="text" 
+        id="ingredients" 
+        name="ingredients"
+        [ngModel]="plat.ingredients.join(', ')"
+        (ngModelChange)="updateIngredients($event)">
+    </div>
+
+    <div class="form-group">
+      <label for="prix">Prix</label>
+      <input 
+        type="number" 
+        id="prix" 
+        name="prix" 
+        [(ngModel)]="plat.prix" 
+        required>
+    </div>
+
+    <div class="form-group">
+      <label>
+        <input 
+          type="checkbox" 
+          name="disponible" 
+          [(ngModel)]="plat.disponible">
+        Disponible
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="!platForm.form.valid">
+        {{ plat.id ? 'Modifier' : 'Créer' }}
+      </button>
+      <button type="button" (click)="onCancel()">Annuler</button>
+    </div>
+  </form>
+</div> 

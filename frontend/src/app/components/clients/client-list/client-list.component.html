@@ -1,0 +1,48 @@
+<div class="container">
+  <div class="header">
+    <h2>Liste des Clients</h2>
+    <button class="add-button" routerLink="/clients/nouveau">Ajouter un client</button>
+  </div>
+
+  <div class="controls">
+    <input 
+      type="text" 
+      [ngModel]="searchTerm"
+      (ngModelChange)="search($event)"
+      placeholder="Rechercher un client..."
+      class="search-input"
+    >
+    
+    <div class="sort-controls">
+      <button (click)="sort('nom')" [class.active]="sortField === 'nom'">
+        Nom {{ sortField === 'nom' ? (sortDirection === 'asc' ? '↑' : '↓') : '' }}
+      </button>
+      <button (click)="sort('telephone')" [class.active]="sortField === 'telephone'">
+        Téléphone {{ sortField === 'telephone' ? (sortDirection === 'asc' ? '↑' : '↓') : '' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="client-grid">
+    @for (client of paginatedClients; track client.id) {
+      <div class="client-card">
+        <h3>{{ client.nom }}</h3>
+        <p>Téléphone: {{ client.telephone }}</p>
+        <p>Commandes: {{ client.commandes?.length || 0 }}</p>
+        <div class="actions">
+          <button (click)="editClient(client)">Modifier</button>
+          <button (click)="deleteClient(client.id)">Supprimer</button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="pagination">
+    <button (click)="previousPage()" [disabled]="currentPage === 1">Précédent</button>
+    <span>Page {{ currentPage }}</span>
+    <button (click)="nextPage()" 
+            [disabled]="currentPage * itemsPerPage >= filteredClients.length">
+      Suivant
+    </button>
+  </div>
+</div> 

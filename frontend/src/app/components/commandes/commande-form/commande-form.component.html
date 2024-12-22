@@ -1,0 +1,43 @@
+<div class="container">
+  <h2>{{ commande.id ? 'Modifier' : 'Créer' }} une commande</h2>
+  
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>Client</label>
+      <select [(ngModel)]="selectedClientId" (change)="onClientSelect()" name="client" required>
+        <option [value]="0">Sélectionner un client</option>
+        @for (client of clients; track client.id) {
+          <option [value]="client.id">{{ client.nom }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Plats disponibles</label>
+      <div class="plats-grid">
+        @for (plat of platsDisponibles; track plat.id) {
+          <div 
+            class="plat-item" 
+            [class.selected]="plat.id !== undefined && selectedPlatIds.includes(plat.id)"
+            (click)="onPlatToggle(plat.id)">
+            <h3>{{ plat.nom }}</h3>
+            <p>Prix: {{ plat.prix }}€</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Total: {{ commande.total }}€</label>
+      <label>Remise: {{ commande.remise }}€</label>
+      <label>Total après remise: {{ commande.totalApresRemise }}€</label>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="!isFormValid()">
+        {{ commande.id ? 'Modifier' : 'Créer' }}
+      </button>
+      <button type="button" (click)="onCancel()">Annuler</button>
+    </div>
+  </form>
+</div> 

@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="header">
+    <h2>Liste des Plats</h2>
+    <button class="add-button" routerLink="/plats/nouveau">Ajouter un plat</button>
+  </div>
+  <div class="controls">
+    <input 
+      type="text" 
+      [ngModel]="searchTerm"
+      (ngModelChange)="search($event)"
+      placeholder="Rechercher..."
+    >
+    
+    <div class="sort-controls">
+      <button (click)="sort('nom')" [class.active]="sortField === 'nom'">
+        Nom {{ sortField === 'nom' ? (sortDirection === 'asc' ? '↑' : '↓') : '' }}
+      </button>
+      <button (click)="sort('prix')" [class.active]="sortField === 'prix'">
+        Prix {{ sortField === 'prix' ? (sortDirection === 'asc' ? '↑' : '↓') : '' }}
+      </button>
+    </div>
+  </div>
+  <div class="plat-grid">
+    @for (plat of paginatedPlats; track plat.id) {
+      <div class="plat-card">
+        <h3>{{ plat.nom }}</h3>
+        <p>Prix: {{ plat.prix }}€</p>
+        <p>Disponible: {{ plat.disponible ? 'Oui' : 'Non' }}</p>
+        <div class="actions">
+          <button (click)="editPlat(plat)">Modifier</button>
+          <button (click)="deletePlat(plat.id)">Supprimer</button>
+        </div>
+      </div>
+    }
+  </div>
+  <div class="pagination">
+    <button (click)="previousPage()" [disabled]="currentPage === 1">Précédent</button>
+    <span>Page {{ currentPage }}</span>
+    <button (click)="nextPage()" 
+            [disabled]="currentPage * itemsPerPage >= filteredPlats.length">
+      Suivant
+    </button>
+  </div>
+</div> 
